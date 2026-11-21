@@ -1,6 +1,6 @@
 {
-  "versionCode": 119,
-  "versionName": "3.98",
+  "versionCode": 120,
+  "versionName": "3.99",
   "apk": "StreamDesk.apk",
-  "notes": "Sport 3 and Sport 4 now use their HD links, which play without stopping"
+  "notes": "The activity log keeps a full day: fewer repeated lines while paused, one line per download"
 }

@@ -2585,7 +2585,8 @@ private fun LogsScreen(onDismiss: () -> Unit, onCopy: (String) -> Unit) {
     val list = androidx.compose.foundation.lazy.rememberLazyListState()
     var confirmClear by remember { mutableStateOf(false) }
     // Newest at the bottom: follow new lines as they arrive
-    LaunchedEffect(lines.size) { if (lines.isNotEmpty()) list.scrollToItem(lines.lastIndex) }
+    // (keyed on the last line, since a full log keeps the same number of lines)
+    LaunchedEffect(lines.lastOrNull()) { if (lines.isNotEmpty()) list.scrollToItem(lines.lastIndex) }
 
     Dialog(
         onDismissRequest = onDismiss,

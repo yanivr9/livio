@@ -281,6 +281,7 @@ class PlayerActivity : ComponentActivity() {
         lifecycleScope.launch {
             var seconds = 0
             var bufferingFor = 0
+            var quietAliveAt = -QUIET_ALIVE_SECONDS
             while (true) {
                 val onScreen = lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED) || isInPictureInPictureMode
                 if (onScreen) updateStats()
@@ -290,8 +291,10 @@ class PlayerActivity : ComponentActivity() {
                     bufferingFor = 0
                     reconnectLive("frozen for $STALL_SECONDS s")
                 }
-                // A line every 30 s: if the picture goes black, the log shows whether playback was still running
-                if (++seconds % 30 == 0) {
+                // A line every 30 s while playing: if the picture goes black, the log shows whether playback was still running.
+                // While paused or stopped, one line every 10 minutes, so a long pause doesn't push the rest out of the log.
+                if (++seconds % 30 == 0 && (player.isPlaying || seconds - quietAliveAt >= QUIET_ALIVE_SECONDS)) {
+                    if (!player.isPlaying) quietAliveAt = seconds
                     AppLog.i("player", "  alive ${seconds}s: ${stateName(player.playbackState)}, playing=${player.isPlaying}, buffer ${stats.buffer}, dropped ${stats.dropped}")
                 }
                 delay(1000)
@@ -1332,6 +1335,7 @@ class PlayerActivity : ComponentActivity() {
         /** How long the phone shows the guide bar after the controls come up. */
         private const val GUIDE_PHONE_MS = 5_000L
         private const val STALL_SECONDS = 25
+        private const val QUIET_ALIVE_SECONDS = 600   // "alive" lines while not playing: one per 10 minutes
 
         private val LINK = Regex("""(https?|rtsp|rtmp)://\S+""", RegexOption.IGNORE_CASE)
         private val UNSUPPORTED_SCHEMES = setOf("udp", "rtp", "srt", "mms", "rtmps")

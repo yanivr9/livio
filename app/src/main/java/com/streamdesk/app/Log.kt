@@ -13,7 +13,7 @@ import java.util.concurrent.Executors
  * on a phone can be read and copied without a computer. Account usernames and passwords are always hidden.
  */
 object AppLog {
-    private const val MAX_LINES = 600
+    private const val MAX_LINES = 3000   // about a day of normal use
     private val time = SimpleDateFormat("MM-dd HH:mm:ss.SSS", Locale.US)
     private val writer = Executors.newSingleThreadExecutor()
     private var file: File? = null

@@ -131,27 +131,41 @@ private fun download(link: String, userAgent: String, sniff: Boolean): String? {
             )
         }
         val moved = if (conn.url.toString() != link) " (via ${conn.url.host})" else ""
-        AppLog.i("net", "GET $link as ${agentName(userAgent)} → HTTP $code$moved in ${System.currentTimeMillis() - started} ms")
-        if (code !in 200..299) throw HttpStatusException(code)
-        if (sniff && conn.contentType.orEmpty().lowercase().startsWith("video/")) return null
+        // One line per request: written here when nothing is downloaded, otherwise once the download is done
+        val request = "GET $link as ${agentName(userAgent)} → HTTP $code$moved in ${System.currentTimeMillis() - started} ms"
+        if (code !in 200..299) {
+            AppLog.i("net", request)
+            throw HttpStatusException(code)
+        }
+        if (sniff && conn.contentType.orEmpty().lowercase().startsWith("video/")) {
+            AppLog.i("net", "$request (a video stream)")
+            return null
+        }
 
         val out = ByteArrayOutputStream()
         val buf = ByteArray(64 * 1024)
         var checkedStart = false
-        conn.inputStream.use { input ->
-            while (true) {
-                val n = input.read(buf)
-                if (n < 0) break
-                out.write(buf, 0, n)
-                // A stream starts with binary video data; a playlist starts with "#EXTM3U", "#EXTINF" or a link
-                if (sniff && !checkedStart && out.size() >= SNIFF_BYTES) {
-                    checkedStart = true
-                    if (!looksLikeText(out.toByteArray())) return null
+        var finished = false
+        try {
+            conn.inputStream.use { input ->
+                while (true) {
+                    val n = input.read(buf)
+                    if (n < 0) break
+                    out.write(buf, 0, n)
+                    // A stream starts with binary video data; a playlist starts with "#EXTM3U", "#EXTINF" or a link
+                    if (sniff && !checkedStart && out.size() >= SNIFF_BYTES) {
+                        checkedStart = true
+                        if (!looksLikeText(out.toByteArray())) return null
+                    }
+                    if (out.size() > MAX_PLAYLIST_BYTES) throw IOException("the file is larger than ${MAX_PLAYLIST_BYTES / 1024 / 1024} MB")
                 }
-                if (out.size() > MAX_PLAYLIST_BYTES) throw IOException("the file is larger than ${MAX_PLAYLIST_BYTES / 1024 / 1024} MB")
             }
+            finished = true
+        } finally {
+            // Also written when the download stops early (not a channel list, too big, connection dropped)
+            val got = "${out.size() / 1024} KB in ${System.currentTimeMillis() - started} ms"
+            AppLog.i("net", if (finished) "$request, received $got" else "$request, stopped after $got")
         }
-        AppLog.i("net", "  received ${out.size() / 1024} KB in ${System.currentTimeMillis() - started} ms")
         val text = out.toString(Charsets.UTF_8.name())
         return if (sniff && !isChannelList(text)) null else text
     } finally {
