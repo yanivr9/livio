@@ -7,7 +7,7 @@ class SportListTest {
     // The kinds of names a provider uses: one channel in several qualities, plus look-alike channels
     private val names = listOf(
         "IL: YES SPORT 1", "IL: YES SPORT 1 FHD", "IL: YES SPORT 1 HD", "IL: YES SPORT 10 HD",
-        "IL: YES SPORT 2 FHD", "IL: YES SPORT 2 HD", "IL: YES SPORT 3 FHD", "IL: YES SPORT 4 HD", "IL: YES SPORT 6 FHD",
+        "IL: YES SPORT 2 FHD", "IL: YES SPORT 2 HD", "IL: YES SPORT 3 FHD", "IL: YES SPORT 3 HD", "IL: YES SPORT 4 FHD", "IL: YES SPORT 4 HD", "IL: YES SPORT 6 FHD",
         "IL: Sport 5 4K HDR", "IL: Sport 5 4K", "IL: Sport 5 FHD P50", "IL: Sport 5 FHD", "IL: Sport 5 HD", "IL: Sport 5 SD",
         "IL: Sport 5+ Live 4K", "IL: Sport 5+ Live FHD", "IL: Sport 5+ Live HD", "IL: Sport 5+ Stars FHD P50", "IL: Sport 5+ Stars HD",
         "IL: Sport 5 Plus FHD", "IL: Sport 5 Plus", "IL: Sport 5 Gold", "IL: Sport 5+ UHD 4K", "IL: Sport 5+ Max FHD", "IL: Sport 5+ Plus 4K",
@@ -32,6 +32,9 @@ class SportListTest {
         val picked = pick(QualityCap.Best).associateBy { it.name }
         assertEquals(urlOf("IL: YES SPORT 1 FHD"), picked.getValue("Sport 1").url)
         assertEquals(urlOf("IL: YES SPORT 2 FHD"), picked.getValue("Sport 2").url)
+        assertEquals(urlOf("IL: YES SPORT 3 HD"), picked.getValue("Sport 3").url)   // their FHD links keep stopping
+        assertEquals(urlOf("IL: YES SPORT 4 HD"), picked.getValue("Sport 4").url)
+        assertEquals("HD", picked.getValue("Sport 4").group)
         assertEquals(urlOf("IL: Sport 5 FHD"), picked.getValue("Sport 5").url)   // exactly "Sport 5 FHD", as the list says
         assertEquals("Full HD", picked.getValue("Sport 5").group)
         assertEquals(urlOf("IL: ONE 1 4K"), picked.getValue("ONE 1").url)

@@ -10,8 +10,8 @@
   var SPORT_TEXT = [
     'Sport 1 = YES SPORT 1',
     'Sport 2 = YES SPORT 2',
-    'Sport 3 = YES SPORT 3',
-    'Sport 4 = YES SPORT 4',
+    'Sport 3 = "YES SPORT 3 HD"',   // FHD links of Sport 3 and 4 kept stopping (2026-11-21)
+    'Sport 4 = "YES SPORT 4 HD"',
     'Sport 5 = "Sport 5 FHD"',
     'Sport 5+ = Sport 5+ | Sport 5 Plus',
     'Sport 5 Live = Sport 5+ Live',

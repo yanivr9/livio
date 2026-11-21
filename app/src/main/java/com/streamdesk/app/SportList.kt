@@ -49,11 +49,12 @@ object DeviceQuality {
 object SportList {
     // "Label = name at the provider" (several names may be separated by "|"). Sport 1–4 and 6 are called "YES SPORT" by this provider.
     // A name in quotes means exactly that channel, not its best quality: Sport 5 is the provider's "Sport 5 FHD" link.
+    // Sport 3 and 4 use the HD links: their FHD links stopped every few seconds (2026-11-21), the HD ones played smoothly.
     val DEFAULT_TEXT = """
         Sport 1 = YES SPORT 1
         Sport 2 = YES SPORT 2
-        Sport 3 = YES SPORT 3
-        Sport 4 = YES SPORT 4
+        Sport 3 = "YES SPORT 3 HD"
+        Sport 4 = "YES SPORT 4 HD"
         Sport 5 = "Sport 5 FHD"
         Sport 5+ = Sport 5+ | Sport 5 Plus
         Sport 5 Live = Sport 5+ Live
@@ -67,6 +68,21 @@ object SportList {
 
     /** Earlier defaults: a phone that still has one of these (never edited) gets the new default. */
     val OLD_DEFAULT_TEXTS = listOf(
+        """
+        Sport 1 = YES SPORT 1
+        Sport 2 = YES SPORT 2
+        Sport 3 = YES SPORT 3
+        Sport 4 = YES SPORT 4
+        Sport 5 = "Sport 5 FHD"
+        Sport 5+ = Sport 5+ | Sport 5 Plus
+        Sport 5 Live = Sport 5+ Live
+        Sport 5 Stars = Sport 5+ Stars
+        Sport 5 Gold = Sport 5 Gold | Sport 5+ Gold
+        Sport 5+ Max = Sport 5+ Max
+        Sport 6 = YES SPORT 6
+        ONE 1
+        ONE 2
+        """.trimIndent(),
         """
         Sport 1 = YES SPORT 1
         Sport 2 = YES SPORT 2

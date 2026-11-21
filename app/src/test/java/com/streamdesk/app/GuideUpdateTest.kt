@@ -34,7 +34,7 @@ class GuideUpdateTest {
     fun readsTheUpdateFile() {
         val info = Updates.parse("""{"versionCode":28,"versionName":"3.7","apk":"StreamDesk.apk","notes":"Faster"}""")!!
         assertEquals(28, info.code)
-        assertEquals("https://raw.githubusercontent.com/yanivr9/live-streams/main/dist/StreamDesk.apk", info.apkUrl)
+        assertEquals("https://raw.githubusercontent.com/yanivr9/livio/main/dist/StreamDesk.apk", info.apkUrl)
         assertEquals(true, Updates.isNewer(info, 27))
         assertEquals(false, Updates.isNewer(info, 28))
         assertNull(Updates.parse("""{"versionCode":28,"apk":"http://insecure/x.apk"}"""))   // only https

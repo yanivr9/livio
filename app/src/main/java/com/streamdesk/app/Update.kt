@@ -16,10 +16,10 @@ data class UpdateInfo(val code: Int, val name: String, val apkUrl: String, val n
  * and offers the download link; installing stays with the browser and Android's installer, as for the first install.
  */
 object Updates {
-    const val UPDATE_URL = "https://raw.githubusercontent.com/yanivr9/live-streams/main/dist/update.json"
+    const val UPDATE_URL = "https://raw.githubusercontent.com/yanivr9/livio/main/dist/update.json"
 
     /** The newest APK, short enough to type with a remote in the Downloader app on a TV box. */
-    const val SHORT_DOWNLOAD = "github.com/yanivr9/live-streams/raw/main/dist/StreamDesk.apk"
+    const val SHORT_DOWNLOAD = "github.com/yanivr9/livio/raw/main/dist/StreamDesk.apk"
 
     fun parse(text: String, baseUrl: String = UPDATE_URL): UpdateInfo? {
         val o = runCatching { JSONObject(text) }.getOrNull() ?: return null
